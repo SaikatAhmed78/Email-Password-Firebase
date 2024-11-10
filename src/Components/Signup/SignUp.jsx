@@ -17,7 +17,7 @@ const SignUp = () => {
         const password = e.target.password.value;
         const terms = e.target.terms.cheched;
 
-        if(!terms){
+        if (!terms) {
             setErrorMessage('Plese Accept Our Terms And Condition')
             return;
         }
@@ -102,7 +102,7 @@ const SignUp = () => {
 
                     <label className="label cursor-pointer justify-start">
 
-                    <input type="checkbox" name='terms' className="checkbox" />
+                        <input type="checkbox" name='terms' className="checkbox" />
 
                         <span className="label-text ml-3">Accept Our Terms & Condition</span>
 
@@ -121,6 +121,14 @@ const SignUp = () => {
             {
                 successMessage && <p className='text-green-500 text-sm text-center'>Sign Up Succesful</p>
             }
+
+            <p className="text-center mt-4 text-lg text-gray-700">
+                Already Have an Account? Please Login
+                <br />
+                <Link to="/login" className="text-[#9538e2] font-bold underline hover:text-[#7224b9]">
+                    Login
+                </Link>
+            </p>
         </div>
     );
 };
