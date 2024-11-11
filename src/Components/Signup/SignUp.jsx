@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth';
 import React, { useState } from 'react';
 import { auth } from '../../Firebase/firebase.init';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -15,6 +15,8 @@ const SignUp = () => {
         const email = e.target.email.value;
         const password = e.target.password.value;
         const terms = e.target.terms.checked;
+        const name = e.target.name.value;
+        const photo = e.target.photo.value;
 
         if (!terms) {
             setErrorMessage('Please Accept Our Terms And Conditions');
@@ -39,10 +41,21 @@ const SignUp = () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then(result => {
                 setSuccessMessage(true);
+
                 sendEmailVerification(auth.currentUser)
                     .then(() => {
-                        console.log('Verification Email Sent');
+                        console.log(result, 'Verification Email Sent');
                     });
+
+                    const profile = {
+                        displayName : name,
+                        photoURL :  photo
+                    }
+
+                    updateProfile(auth.currentUser, profile)
+                    .then( () => {
+                        console.log('user Profile Updated')
+                    })
             })
             .catch(error => {
                 setErrorMessage(error.message);
@@ -51,11 +64,34 @@ const SignUp = () => {
     }
 
     return (
+        
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-indigo-700 p-6">
             <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-xl">
-                <h1 className="text-4xl font-bold text-center text-gray-800 mb-4">Sign Up Now!</h1>
+                <h1 className="text-4xl font-bold text-center text-gray-800 mb-2 mt-12">Sign Up Now!</h1>
 
                 <form onSubmit={handleSignUp} className="space-y-6">
+                    <div className="form-control">
+                        <label className="label">
+                            <span className="label-text text-gray-700">Name</span>
+                        </label>
+                        <input
+                            type="text"
+                            name='name'
+                            placeholder="Name"
+                            className="input input-bordered w-full"
+                            required />
+                    </div>
+                    <div className="form-control">
+                        <label className="label">
+                            <span className="label-text text-gray-700">Photo URL</span>
+                        </label>
+                        <input
+                            type="text"
+                            name='photo'
+                            placeholder="Photo URL"
+                            className="input input-bordered w-full"
+                            required />
+                    </div>
                     <div className="form-control">
                         <label className="label">
                             <span className="label-text text-gray-700">Email</span>

@@ -4,9 +4,9 @@ import image from '../../assets/fitness image.png'
 
 const Home = () => {
     return (
-        <div className="min-h-screen bg-gradient-to-r from-purple-600 to-blue-600 text-white flex items-center justify-center rounded-lg">
+        <div className="min-h-screen bg-gradient-to-r from-purple-600 to-blue-600 text-white flex items-center justify-center rounded-lg mt-12">
             <div className="container mx-auto text-center p-6">
-                <h1 className="text-6xl font-bold mb-4 animate-slideDown">Welcome to Fitness Heaven</h1>
+                <h1 className="text-2xl font-bold mb-4 my-10 animate-slideDown">Welcome to Fitness Heaven</h1>
                 <p className="text-xl mb-8 px-6 md:px-20 lg:px-40 animate-fadeInUp">
                     Join our community and take the first step towards a healthier, happier life. We provide a variety of resources and tools to help you reach your fitness goals.
                 </p>
