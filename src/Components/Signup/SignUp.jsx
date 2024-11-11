@@ -5,135 +5,109 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const SignUp = () => {
-
     const [successMessage, setSuccessMessage] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const [showpassword, setShowPassword] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSignUp = e => {
         e.preventDefault();
 
         const email = e.target.email.value;
         const password = e.target.password.value;
-        const terms = e.target.terms.cheched;
+        const terms = e.target.terms.checked;
 
         if (!terms) {
-            setErrorMessage('Plese Accept Our Terms And Condition')
+            setErrorMessage('Please Accept Our Terms And Conditions');
             return;
         }
 
         setErrorMessage('');
-        setErrorMessage(false);
+        setSuccessMessage(false);
 
-        if (password.length > 6) {
-            setErrorMessage('Password Should Be 6 Character Or Longer');
+        if (password.length < 6) {
+            setErrorMessage('Password Should Be 6 Characters Or Longer');
             return;
         }
 
         const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
 
-        if (!passwordRegex) {
-            setErrorMessage('At least one uppercase, one lowercase, one number and one special character')
+        if (!passwordRegex.test(password)) {
+            setErrorMessage('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
+            return;
         }
-
 
         createUserWithEmailAndPassword(auth, email, password)
             .then(result => {
-                console.log(result.user);
                 setSuccessMessage(true);
-
                 sendEmailVerification(auth.currentUser)
-                .then(() => {
-                    console.log('Verification Email Send')
-                })
+                    .then(() => {
+                        console.log('Verification Email Sent');
+                    });
             })
             .catch(error => {
-                console.log(error.message)
-                setErrorMessage(error.message)
-                setSuccessMessage(false)
-            })
+                setErrorMessage(error.message);
+                setSuccessMessage(false);
+            });
     }
 
     return (
+        <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-indigo-700 p-6">
+            <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-xl">
+                <h1 className="text-4xl font-bold text-center text-gray-800 mb-4">Sign Up Now!</h1>
 
+                <form onSubmit={handleSignUp} className="space-y-6">
+                    <div className="form-control">
+                        <label className="label">
+                            <span className="label-text text-gray-700">Email</span>
+                        </label>
+                        <input
+                            type="email"
+                            name='email'
+                            placeholder="Email"
+                            className="input input-bordered w-full"
+                            required />
+                    </div>
 
-        <div className="card bg-gray-800 w-full mx-auto my-12 max-w-sm shrink-0 shadow-2xl">
-            <h1 className="text-3xl mx-auto font-bold my-2">Sign Up Now!</h1>
+                    <div className="form-control relative">
+                        <label className="label">
+                            <span className="label-text text-gray-700">Password</span>
+                        </label>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name='password'
+                            placeholder="Password"
+                            className="input input-bordered w-full"
+                            required />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className='absolute right-3 top-10 text-gray-600'
+                        >
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </button>
+                    </div>
 
-            <form onSubmit={handleSignUp} className="card-body">
-                <div className="form-control">
+                    <div className="form-control">
+                        <label className="label cursor-pointer justify-start">
+                            <input type="checkbox" name='terms' className="checkbox" />
+                            <span className="label-text ml-3 text-gray-700">Accept Our Terms & Conditions</span>
+                        </label>
+                    </div>
 
-                    <label className="label">
-                        <span className="label-text">Email</span>
-                    </label>
+                    <div className="form-control mt-6">
+                        <button className="btn bg-indigo-600 text-white w-full hover:bg-indigo-700">Sign Up</button>
+                    </div>
+                </form>
 
-                    <input
-                        type="email"
-                        name='email'
-                        placeholder="email"
-                        className="input input-bordered"
-                        required />
-                </div>
+                {errorMessage && <p className="text-red-600 text-center mt-4">{errorMessage}</p>}
+                {successMessage && <p className="text-green-600 text-center mt-4">Sign Up Successful! Please verify your email.</p>}
 
-                <div className="form-control relative">
-
-                    <label className="label">
-                        <span className="label-text">Password</span>
-                    </label>
-
-                    <input
-                        type={showpassword ? "text" : "password"}
-                        name='password'
-                        placeholder="password"
-                        className="input input-bordered"
-                        required />
-
-                    <button
-                        onClick={() => setShowPassword(!showpassword)}
-                        className='btn btn-xs absolute right-2 top-12'
-                    >
-                        {
-                            showpassword ? <FaEyeSlash></FaEyeSlash> : <FaEye />
-                        }
-                    </button>
-
-                    <label className="label">
-                        <Link href="#" className="label-text-alt link link-hover">Forgot password?</Link>
-                    </label>
-
-                </div>
-
-                <div className="form-control">
-
-                    <label className="label cursor-pointer justify-start">
-
-                        <input type="checkbox" name='terms' className="checkbox" />
-
-                        <span className="label-text ml-3">Accept Our Terms & Condition</span>
-
-                    </label>
-                </div>
-
-                <div className="form-control mt-6">
-                    <button className="btn btn-primary">Sign Up</button>
-                </div>
-            </form>
-
-            {
-                errorMessage && <p className="text-red-600 text-sm text-center">{errorMessage}</p>
-            }
-
-            {
-                successMessage && <p className='text-green-500 text-sm text-center'>Sign Up Succesful</p>
-            }
-
-            <p className="text-center mt-4 text-lg text-gray-700">
-                Already Have an Account? Please Login
-                <br />
-                <Link to="/login" className="text-[#9538e2] font-bold underline hover:text-[#7224b9]">
-                    Login
-                </Link>
-            </p>
+                <p className="text-center mt-6 text-gray-700">
+                    Already Have an Account? Please Login
+                    <br />
+                    <Link to="/login" className="text-indigo-600 font-bold underline hover:text-indigo-800">Login</Link>
+                </p>
+            </div>
         </div>
     );
 };

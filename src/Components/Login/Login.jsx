@@ -4,106 +4,87 @@ import { auth } from '../../Firebase/firebase.init';
 import { Link } from 'react-router-dom';
 
 const Login = () => {
-
     const [successMessage, setSuccessMessage] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const emailRef = useRef();
 
     const handleLogin = e => {
-        e.preventDefault()
+        e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
-        console.log(email, password)
 
         setSuccessMessage(false);
-        setErrorMessage('')
+        setErrorMessage('');
 
         signInWithEmailAndPassword(auth, email, password)
             .then(result => {
-                console.log(result.user)
-
-                if(!result.user.emailVerified){
-                    setErrorMessage('Please Verify Your Email Adress')
-                }
-                else{
+                if (!result.user.emailVerified) {
+                    setErrorMessage('Please Verify Your Email Address');
+                } else {
                     setSuccessMessage(true);
                 }
-
             })
-
-
             .catch(error => {
-                console.log('Error', error.message)
-                setErrorMessage(error.message)
-            })
+                setErrorMessage(error.message);
+            });
     };
 
-    const handleForgetPassword = () =>{
+    const handleForgetPassword = () => {
         const emailr = emailRef.current.value;
 
-        if(!emailr){
-            alert('Please Provide A Valid Email')
-        }
-        else{
+        if (!emailr) {
+            alert('Please Provide A Valid Email');
+        } else {
             sendPasswordResetEmail(auth, emailr)
-            .then(() =>{
-                alert('Password Reset Email Send, Please Check Your Email')
-            })
+                .then(() => {
+                    alert('Password Reset Email Sent, Please Check Your Email');
+                });
         }
-    }
+    };
 
     return (
-        <div className="hero bg-base-200 min-h-screen">
-            <div className="hero-content flex-col lg:flex-row-reverse">
-                <div className="text-center lg:text-left">
-                    <h1 className="text-3xl font-bold">Login now!</h1>
-                    <p className="py-6">
+        <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-indigo-500">
+            <div className="flex-col lg:flex-row-reverse bg-white p-10 rounded-xl shadow-lg w-full max-w-md">
+                <div className="text-center lg:text-left mb-6 lg:mb-0">
+                    <h1 className="text-4xl font-bold text-gray-800">Login now!</h1>
+                    <p className="mt-4 text-gray-600">
                         Log in to access all your favorite features and services with ease. Our secure platform is ready to provide you with a safe and seamless experience.
                     </p>
-
                 </div>
-                <div className="card bg-gray-800 w-full max-w-sm shrink-0 shadow-2xl">
-                    <form onSubmit={handleLogin} className="card-body">
+                <div className="w-full">
+                    <form onSubmit={handleLogin} className="space-y-4">
                         <div className="form-control">
                             <label className="label">
-                                <span className="label-text">Email</span>
+                                <span className="label-text text-gray-700">Email</span>
                             </label>
-                            <input type="email" name='email' ref={emailRef} placeholder="email" className="input input-bordered" required />
+                            <input type="email" name='email' ref={emailRef} placeholder="Email" className="input input-bordered w-full" required />
                         </div>
                         <div className="form-control">
                             <label className="label">
-                                <span className="label-text">Password</span>
+                                <span className="label-text text-gray-700">Password</span>
                             </label>
-                            <input type="password" name='password' placeholder="password" className="input input-bordered" required />
-                            <label onClick={handleForgetPassword} className="label">
-                                <a  href="#" className="label-text-alt link link-hover">Forgot password?</a>
+                            <input type="password" name='password' placeholder="Password" className="input input-bordered w-full" required />
+                            <label onClick={handleForgetPassword} className="label text-right">
+                                <span className="text-purple-600 cursor-pointer">Forgot password?</span>
                             </label>
                         </div>
                         <div className="form-control mt-6">
-                            <button className="btn btn-primary">Login</button>
+                            <button className="btn bg-purple-600 text-white w-full hover:bg-purple-700">Login</button>
                         </div>
                     </form>
 
-                    {
-                        successMessage && <p className="text-green-500 text-sm text-center">Login Succesful</p>
-                    }
-                    {
-                        errorMessage && <p className="text-red-600 text-sm text-center">{errorMessage}</p>
-                    }
+                    {successMessage && <p className="text-green-500 text-sm text-center mt-4">Login Successful</p>}
+                    {errorMessage && <p className="text-red-600 text-sm text-center mt-4">{errorMessage}</p>}
 
-                    <p className="text-center mt-4 text-lg text-gray-700">
+                    <p className="text-center mt-6 text-gray-700">
                         New To This Website? Please Sign Up
                         <br />
-                        <Link to="/signup" className="text-[#9538e2] font-bold underline hover:text-[#7224b9]">
-                            Sign Up
-                        </Link>
+                        <Link to="/signup" className="text-purple-600 font-bold underline hover:text-purple-800">Sign Up</Link>
                     </p>
-
                 </div>
             </div>
         </div>
     );
-
 };
 
 export default Login;
